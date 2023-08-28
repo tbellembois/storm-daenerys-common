@@ -51,7 +51,7 @@ pub struct AclEntry {
 impl fmt::Debug for AclEntry {
 
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}: {}", self.qualifier, self.perm)
+        write!(f, "{:?}: {:?} {}", self.qualifier, self.qualifier_cn, self.perm)
     }
 
 }
