@@ -1,9 +1,11 @@
 use std::fmt;
 
 use posix_acl::ACLEntry;
-use serde::{Serialize, Deserialize};
-use users::get_user_by_uid;
+use serde::{Deserialize, Serialize};
 use users::get_group_by_gid;
+use users::get_group_by_name;
+use users::get_user_by_name;
+use users::get_user_by_uid;
 
 #[derive(Serialize, Deserialize, Ord, Eq, PartialEq, PartialOrd, Clone, Debug)]
 pub enum Qualifier {
@@ -24,9 +26,7 @@ pub enum Qualifier {
 }
 
 impl fmt::Display for Qualifier {
-
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-
         match self {
             Qualifier::Undefined => write!(f, "Undefined"),
             Qualifier::UserObj => write!(f, "UserObj"),
@@ -36,30 +36,28 @@ impl fmt::Display for Qualifier {
             Qualifier::Group(g) => write!(f, "Group:{}", g),
             Qualifier::Mask => write!(f, "Mask"),
         }
-        
     }
-
 }
 
 #[derive(Serialize, Deserialize, Ord, Eq, PartialEq, PartialOrd, Clone)]
 pub struct AclEntry {
-    pub qualifier: Qualifier, // the subject of a permission grant
+    pub qualifier: Qualifier,         // the subject of a permission grant
     pub qualifier_cn: Option<String>, // optionnal user or group name when qualifier is User(u32) or Group(u32)
     pub perm: u32,
 }
 
 impl fmt::Debug for AclEntry {
-
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}: {:?} {}", self.qualifier, self.qualifier_cn, self.perm)
+        write!(
+            f,
+            "{:?}: {:?} {}",
+            self.qualifier, self.qualifier_cn, self.perm
+        )
     }
-
 }
 
 impl AclEntry {
-    
     pub fn from_posix_acl_entry(entry: &ACLEntry) -> Self {
-
         let qualifier = match entry.qual {
             posix_acl::Qualifier::Undefined => Qualifier::Undefined,
             posix_acl::Qualifier::UserObj => Qualifier::UserObj,
@@ -80,40 +78,46 @@ impl AclEntry {
             Qualifier::Other => None,
             Qualifier::User(u) => match get_user_by_uid(u) {
                 Some(user) => Some(user.name().to_string_lossy().to_string()),
-                None => Some("can not find user name".to_string()),
+                None => Some("can not find user name".to_string()), // FIXME
             },
             Qualifier::Group(g) => match get_group_by_gid(g) {
                 Some(group) => Some(group.name().to_string_lossy().to_string()),
-                None => Some("can not find group name".to_string()),
+                None => Some("can not find group name".to_string()), // FIXME
             },
             Qualifier::Mask => None,
         };
 
-        AclEntry { qualifier, perm, qualifier_cn }
-
+        AclEntry {
+            qualifier,
+            perm,
+            qualifier_cn,
+        }
     }
 
     pub fn to_posix_acl_entry(&self) -> ACLEntry {
-
         let qual = match self.qualifier {
             Qualifier::Undefined => posix_acl::Qualifier::Undefined,
             Qualifier::UserObj => posix_acl::Qualifier::UserObj,
             Qualifier::GroupObj => posix_acl::Qualifier::GroupObj,
             Qualifier::Other => posix_acl::Qualifier::Other,
-            Qualifier::User(u) => posix_acl::Qualifier::User(u),
-            Qualifier::Group(g) => posix_acl::Qualifier::Group(g),
+            Qualifier::User(_) => match get_user_by_name(&self.qualifier_cn.as_ref().unwrap()) {
+                Some(user) => posix_acl::Qualifier::User(user.uid()),
+                None => posix_acl::Qualifier::User(65535), // FIXME
+            },
+            Qualifier::Group(_) => match get_group_by_name(&self.qualifier_cn.as_ref().unwrap()) {
+                Some(group) => posix_acl::Qualifier::Group(group.gid()),
+                None => posix_acl::Qualifier::Group(65535), // FIXME
+            },
             Qualifier::Mask => posix_acl::Qualifier::Mask,
         };
 
         let perm = self.perm;
 
-        posix_acl::ACLEntry{ qual, perm }
-
-    } 
-
+        posix_acl::ACLEntry { qual, perm }
+    }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct SetAcl {
     pub name: String,
     pub acls: Vec<AclEntry>,
