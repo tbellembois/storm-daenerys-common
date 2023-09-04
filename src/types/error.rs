@@ -10,6 +10,7 @@ pub enum CommonError {
     InvalidDirectoryName,
     InternalServerError(String),
     Timeout(String),
+    UserNotFoundInGroup,
 }
 
 // Implement std::fmt::Display for CommonError
@@ -22,6 +23,7 @@ impl fmt::Display for CommonError {
             CommonError::InvalidDirectoryName => write!(f, "invalid directory name"),
             CommonError::InternalServerError(e) => write!(f, "internal server error {}", e),
             CommonError::Timeout(t) => write!(f, "timeout {}", t),
+            CommonError::UserNotFoundInGroup => write!(f, "user not found in group"),
         }
     }
 }

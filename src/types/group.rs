@@ -14,3 +14,9 @@ pub struct CreateGroup {
     pub description: String,
     pub owner: String,
 }
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct AddDelUserToGroup {
+    pub group_cn: String,
+    pub user_cn: String,
+}
