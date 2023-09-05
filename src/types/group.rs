@@ -8,7 +8,7 @@ pub struct Group {
     pub owner: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct CreateGroup {
     pub cn: String,
     pub description: String,
