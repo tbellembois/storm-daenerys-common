@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Group {
     pub cn: String,
     pub description: String,
@@ -8,15 +8,21 @@ pub struct Group {
     pub owner: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct CreateGroup {
-    pub cn: String,
-    pub description: String,
-    pub owner: String,
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct AddDelUserToGroup {
+    #[serde(rename(serialize = "group", deserialize = "group"))]
+    pub group_cn: String,
+    #[serde(rename(serialize = "username", deserialize = "username"))]
+    pub user_cn: String,
+    #[serde(serialize_with = "emit_directory")]
+    pub directory: String,
+    #[serde(serialize_with = "emit_manager")]
+    pub manager: bool,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct AddDelUserToGroup {
-    pub group_cn: String,
-    pub user_cn: String,
+fn emit_directory<S: Serializer>(_: &String, s: S) -> Result<S::Ok, S::Error> {
+    s.serialize_str("universite|ldap_uca")
+}
+fn emit_manager<S: Serializer>(_: &bool, s: S) -> Result<S::Ok, S::Error> {
+    s.serialize_bool(false)
 }
