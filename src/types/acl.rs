@@ -1,11 +1,6 @@
 use std::fmt;
 
-use posix_acl::ACLEntry;
 use serde::{Deserialize, Serialize};
-use users::get_group_by_gid;
-use users::get_group_by_name;
-use users::get_user_by_name;
-use users::get_user_by_uid;
 
 #[derive(Serialize, Deserialize, Ord, Eq, PartialEq, PartialOrd, Clone, Debug)]
 pub enum Qualifier {
@@ -53,67 +48,6 @@ impl fmt::Debug for AclEntry {
             "{:?}: {:?} {}",
             self.qualifier, self.qualifier_cn, self.perm
         )
-    }
-}
-
-impl AclEntry {
-    pub fn from_posix_acl_entry(entry: &ACLEntry) -> Self {
-        let qualifier = match entry.qual {
-            posix_acl::Qualifier::Undefined => Qualifier::Undefined,
-            posix_acl::Qualifier::UserObj => Qualifier::UserObj,
-            posix_acl::Qualifier::GroupObj => Qualifier::GroupObj,
-            posix_acl::Qualifier::Other => Qualifier::Other,
-            posix_acl::Qualifier::User(u) => Qualifier::User(u),
-            posix_acl::Qualifier::Group(g) => Qualifier::Group(g),
-            posix_acl::Qualifier::Mask => Qualifier::Mask,
-        };
-
-        let perm = entry.perm;
-
-        // FIXME
-        let qualifier_cn: Option<String> = match qualifier {
-            Qualifier::Undefined => None,
-            Qualifier::UserObj => None,
-            Qualifier::GroupObj => None,
-            Qualifier::Other => None,
-            Qualifier::User(u) => match get_user_by_uid(u) {
-                Some(user) => Some(user.name().to_string_lossy().to_string()),
-                None => Some("can not find user name".to_string()), // FIXME
-            },
-            Qualifier::Group(g) => match get_group_by_gid(g) {
-                Some(group) => Some(group.name().to_string_lossy().to_string()),
-                None => Some("can not find group name".to_string()), // FIXME
-            },
-            Qualifier::Mask => None,
-        };
-
-        AclEntry {
-            qualifier,
-            perm,
-            qualifier_cn,
-        }
-    }
-
-    pub fn to_posix_acl_entry(&self) -> ACLEntry {
-        let qual = match self.qualifier {
-            Qualifier::Undefined => posix_acl::Qualifier::Undefined,
-            Qualifier::UserObj => posix_acl::Qualifier::UserObj,
-            Qualifier::GroupObj => posix_acl::Qualifier::GroupObj,
-            Qualifier::Other => posix_acl::Qualifier::Other,
-            Qualifier::User(_) => match get_user_by_name(&self.qualifier_cn.as_ref().unwrap()) {
-                Some(user) => posix_acl::Qualifier::User(user.uid()),
-                None => posix_acl::Qualifier::User(65535), // FIXME
-            },
-            Qualifier::Group(_) => match get_group_by_name(&self.qualifier_cn.as_ref().unwrap()) {
-                Some(group) => posix_acl::Qualifier::Group(group.gid()),
-                None => posix_acl::Qualifier::Group(65535), // FIXME
-            },
-            Qualifier::Mask => posix_acl::Qualifier::Mask,
-        };
-
-        let perm = self.perm;
-
-        posix_acl::ACLEntry { qual, perm }
     }
 }
 

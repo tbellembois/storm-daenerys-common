@@ -1,12 +1,11 @@
 [package]
-name = "storm-daenerys-common"
+name = "storm_daenerys_common"
 version = "0.1.0"
+authors = ["Thomas Bellembois <thomas.bellembois@uca.fr>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-posix-acl = "1.1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0.68"
-users = "0.11"
