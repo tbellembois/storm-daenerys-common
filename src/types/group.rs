@@ -1,4 +1,4 @@
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Serialize, Serializer};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Group {
