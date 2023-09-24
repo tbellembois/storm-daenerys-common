@@ -5,6 +5,7 @@ pub struct Group {
     pub cn: String,
     pub description: String,
     pub member: Option<Vec<String>>, // "uid=thbellem,ou=people,dc=uca,dc=fr"
+    #[serde(skip_deserializing)]
     pub owner: Option<String>,
 }
 
