@@ -11,6 +11,7 @@ pub enum CommonError {
     InternalServerError(String),
     Timeout(String),
     UserNotFoundInGroup,
+    UnexpectedResponse(String),
 }
 
 // Implement std::fmt::Display for CommonError
@@ -24,6 +25,7 @@ impl fmt::Display for CommonError {
             CommonError::InternalServerError(e) => write!(f, "internal server error {}", e),
             CommonError::Timeout(t) => write!(f, "timeout {}", t),
             CommonError::UserNotFoundInGroup => write!(f, "user not found in group"),
+            CommonError::UnexpectedResponse(e) => write!(f, "unexpected response {}", e),
         }
     }
 }
