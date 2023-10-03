@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize, Serializer};
 pub struct Group {
     pub cn: String,
     pub description: String,
-    #[serde(skip_serializing)]
+    #[serde(skip_serializing_if = "Option::is_none")] // field triggers an error on group creation
     pub member: Option<Vec<String>>, // "uid=thbellem,ou=people,dc=uca,dc=fr"
     #[serde(skip_deserializing)]
     pub owner: Option<String>,
