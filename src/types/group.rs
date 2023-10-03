@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize, Serializer};
 pub struct Group {
     pub cn: String,
     pub description: String,
+    #[serde(skip_serializing)]
     pub member: Option<Vec<String>>, // "uid=thbellem,ou=people,dc=uca,dc=fr"
     #[serde(skip_deserializing)]
     pub owner: Option<String>,
