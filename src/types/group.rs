@@ -34,6 +34,12 @@ pub struct AddDelUserToGroup {
     pub manager: bool,
 }
 
+impl fmt::Display for AddDelUserToGroup {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "group:{} user:{} ", self.group_cn, self.user_cn)
+    }
+}
+
 fn emit_directory<S: Serializer>(_: &String, s: S) -> Result<S::Ok, S::Error> {
     s.serialize_str("universite|ldap_uca")
 }
