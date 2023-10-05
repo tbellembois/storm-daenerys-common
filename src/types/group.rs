@@ -1,3 +1,5 @@
+use std::fmt;
+
 use serde::{Deserialize, Serialize, Serializer};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -8,6 +10,16 @@ pub struct Group {
     pub member: Option<Vec<String>>, // "uid=thbellem,ou=people,dc=uca,dc=fr"
     #[serde(skip_deserializing)]
     pub owner: Option<String>,
+}
+
+impl fmt::Display for Group {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{} {} - owner:{:?}",
+            self.cn, self.description, self.owner
+        )
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, Default)]
