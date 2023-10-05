@@ -51,6 +51,39 @@ impl fmt::Debug for AclEntry {
     }
 }
 
+impl fmt::Display for AclEntry {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let qualifier: String = match self.qualifier {
+            Qualifier::Undefined => "".to_string(),
+            Qualifier::UserObj => "owner_user".to_string(),
+            Qualifier::GroupObj => "owner_group".to_string(),
+            Qualifier::Other => "other".to_string(),
+            Qualifier::User(_) => "user".to_string(),
+            Qualifier::Group(_) => "group".to_string(),
+            Qualifier::Mask => "mask".to_string(),
+        };
+
+        let qualifier_cn: String = match &self.qualifier_cn {
+            Some(qualifier_cn) => qualifier_cn.to_string(),
+            None => "".to_string(),
+        };
+
+        let perm: String = match self.perm {
+            0 => "---".to_string(),
+            1 => "--x".to_string(),
+            2 => "-w-".to_string(),
+            3 => "-wx".to_string(),
+            4 => "r--".to_string(),
+            5 => "r-x".to_string(),
+            6 => "rw-".to_string(),
+            7 => "rwx".to_string(),
+            _ => "_".to_string(),
+        };
+
+        write!(f, "{} {}: {}", qualifier, qualifier_cn, perm)
+    }
+}
+
 #[derive(Deserialize, Serialize)]
 pub struct SetAcl {
     pub name: String,
