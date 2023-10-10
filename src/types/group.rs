@@ -22,7 +22,7 @@ impl fmt::Display for Group {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Clone, Debug, Default)]
 pub struct AddDelUserToGroup {
     #[serde(rename(serialize = "group", deserialize = "group"))]
     pub group_cn: String,
