@@ -2,7 +2,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize, Serializer};
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, PartialOrd, Eq, Ord)]
 pub struct Group {
     pub cn: String,
     pub description: String,
