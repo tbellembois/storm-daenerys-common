@@ -7,6 +7,7 @@ pub struct Directory {
     pub name: String,
     pub path: String,
     pub acls: Vec<AclEntry>,
+    pub valid: bool,
 }
 
 #[derive(Deserialize)]
