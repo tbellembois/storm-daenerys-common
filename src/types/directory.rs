@@ -15,7 +15,7 @@ pub struct CreateDirectory {
     pub name: String,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Quota {
     pub available_space: u64,
     pub total_space: u64,
