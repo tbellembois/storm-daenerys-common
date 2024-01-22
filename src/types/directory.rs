@@ -10,7 +10,7 @@ pub struct Directory {
     pub valid: bool,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct CreateDirectory {
     pub name: String,
 }
