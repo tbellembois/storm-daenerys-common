@@ -1,0 +1,28 @@
+---
+stages:
+  - sonarqube-check
+
+variables:
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA # or $CI_COMMIT_TAG if only building on tags
+
+sonarqube-check:
+  stage: sonarqube-check
+  image:
+    name: sonarsource/sonar-scanner-cli:5.0
+    entrypoint: [""]
+  variables:
+    SONAR_HOST_URL: https://sonarqube.mesocentre.uca.fr
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - main
+    - develop
