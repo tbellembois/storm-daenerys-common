@@ -6,6 +6,7 @@ use super::acl::AclEntry;
 pub struct Directory {
     pub name: String,
     pub path: String,
+    pub quota: u32,
     pub acls: Vec<AclEntry>,
     pub valid: bool,
 }
