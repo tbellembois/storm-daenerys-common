@@ -8,6 +8,7 @@ use super::directory::Quota;
 #[derive(Deserialize, Serialize)]
 pub struct Config {
     pub admin: String,
+    pub connected_user: String,
     pub current_admin_restriction: Option<String>,
     pub users_dsi_api_group_prefix: String,
     pub root_groups: Option<Vec<String>>,
