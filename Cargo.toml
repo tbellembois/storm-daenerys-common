@@ -1,7 +1,10 @@
 [package]
 name = "storm_daenerys_common"
-version = "0.1.0"
-authors = ["Thomas Bellembois <thomas.bellembois@uca.fr>"]
+version = "1.0.0"
+authors = ["Thomas Bellembois <thomas.bellembois@uca.fr]>"]
+description = "STORM Daenerys common"
+repository = "https://git.mesocentre.uca.fr/mesocentre/storm-daenerys-common"
+rust-version = "1.77"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
