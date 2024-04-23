@@ -41,6 +41,12 @@ pub struct AclEntry {
     pub perm: u32,
 }
 
+impl AclEntry {
+    pub fn is_readonly(&self) -> bool {
+        matches!(self.perm, 0 | 1 | 4 | 5)
+    }
+}
+
 impl fmt::Debug for AclEntry {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
