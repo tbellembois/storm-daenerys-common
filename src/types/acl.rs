@@ -91,7 +91,7 @@ impl fmt::Display for AclEntry {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct SetAcl {
     pub name: String,
     pub acls: Vec<AclEntry>,
