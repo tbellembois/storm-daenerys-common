@@ -36,8 +36,9 @@ impl fmt::Display for Qualifier {
 
 #[derive(Serialize, Deserialize, Ord, Eq, PartialEq, PartialOrd, Clone)]
 pub struct AclEntry {
-    pub qualifier: Qualifier,         // the subject of a permission grant
-    pub qualifier_cn: Option<String>, // optionnal user or group name when qualifier is User(u32) or Group(u32)
+    pub qualifier: Qualifier,              // the subject of a permission grant
+    pub qualifier_cn: Option<String>, // optionnal user username or group name when qualifier is User(u32) or Group(u32)
+    pub qualifier_display: Option<String>, // optionnal user or group display name
     pub perm: u32,
 }
 
