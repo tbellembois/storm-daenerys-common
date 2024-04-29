@@ -91,6 +91,19 @@ impl fmt::Display for AclEntry {
     }
 }
 
+impl AclEntry {
+    pub fn is_read_only(&self) -> bool {
+        matches!(self.perm, 0 | 1 | 4 | 5)
+    }
+
+    pub fn toggle_read_only(&mut self) {
+        self.perm = match self.perm {
+            2 | 3 | 6 | 7 => 5,
+            _ => 7,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SetAcl {
     pub name: String,
