@@ -92,6 +92,13 @@ impl fmt::Display for AclEntry {
 }
 
 impl AclEntry {
+    pub fn is_admin(&self, admin_cn: &str) -> bool {
+        match &self.qualifier_cn {
+            Some(qualifier_cn) => qualifier_cn.eq(admin_cn),
+            None => false,
+        }
+    }
+
     pub fn is_read_only(&self) -> bool {
         matches!(self.perm, 0 | 1 | 4 | 5)
     }
