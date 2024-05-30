@@ -12,6 +12,7 @@ pub enum CommonError {
     Timeout(String),
     UserNotFoundInGroup,
     UnexpectedResponse(String),
+    CanNotModifyNonRestrictedDirectory(String),
 }
 
 // Implement std::fmt::Display for CommonError
@@ -26,6 +27,9 @@ impl fmt::Display for CommonError {
             CommonError::Timeout(t) => write!(f, "timeout {}", t),
             CommonError::UserNotFoundInGroup => write!(f, "user not found in group"),
             CommonError::UnexpectedResponse(e) => write!(f, "unexpected response {}", e),
+            CommonError::CanNotModifyNonRestrictedDirectory(s) => {
+                write!(f, "can not modify the non restricted directory {}", s)
+            }
         }
     }
 }
